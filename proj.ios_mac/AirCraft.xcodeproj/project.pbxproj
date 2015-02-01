@@ -22,6 +22,8 @@
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
 		3B77BBF31A6F918900515F11 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 3B77BBF11A6F918900515F11 /* game */; };
 		3B77BBF41A6F918900515F11 /* menu in Resources */ = {isa = PBXBuildFile; fileRef = 3B77BBF21A6F918900515F11 /* menu */; };
+		3B82F0881A7CFA6600971F33 /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 3B82F0871A7CFA6600971F33 /* sound */; };
+		3B82F08F1A7D127400971F33 /* option in Resources */ = {isa = PBXBuildFile; fileRef = 3B82F08E1A7D127400971F33 /* option */; };
 		3BA164661A702EF300CE2408 /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BA164601A702EF300CE2408 /* AppDelegate.cpp */; };
 		3BA164671A702EF300CE2408 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BA164621A702EF300CE2408 /* GameScene.cpp */; };
 		3BA164681A702EF300CE2408 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BA164641A702EF300CE2408 /* MenuScene.cpp */; };
@@ -218,6 +220,8 @@
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3B77BBF11A6F918900515F11 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; path = game; sourceTree = "<group>"; };
 		3B77BBF21A6F918900515F11 /* menu */ = {isa = PBXFileReference; lastKnownFileType = folder; path = menu; sourceTree = "<group>"; };
+		3B82F0871A7CFA6600971F33 /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sound; sourceTree = "<group>"; };
+		3B82F08E1A7D127400971F33 /* option */ = {isa = PBXFileReference; lastKnownFileType = folder; path = option; sourceTree = "<group>"; };
 		3BA164601A702EF300CE2408 /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = ../Classes/AppDelegate.cpp; sourceTree = "<group>"; };
 		3BA164611A702EF300CE2408 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../Classes/AppDelegate.h; sourceTree = "<group>"; };
 		3BA164621A702EF300CE2408 /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameScene.cpp; path = ../Classes/GameScene.cpp; sourceTree = "<group>"; };
@@ -453,6 +457,8 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3B82F08E1A7D127400971F33 /* option */,
+				3B82F0871A7CFA6600971F33 /* sound */,
 				3B77BBF11A6F918900515F11 /* game */,
 				3B77BBF21A6F918900515F11 /* menu */,
 			);
@@ -627,6 +633,7 @@
 				3B77BBF31A6F918900515F11 /* game in Resources */,
 				5087E78117EB970100C73F5D /* Icon-120.png in Resources */,
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
+				3B82F0881A7CFA6600971F33 /* sound in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
@@ -638,6 +645,7 @@
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				3B77BBF41A6F918900515F11 /* menu in Resources */,
+				3B82F08F1A7D127400971F33 /* option in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,

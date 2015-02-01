@@ -5,9 +5,6 @@
 
 USING_NS_CC;
 
-#define TAG_MENUITEM_PLAY           101
-#define TAG_MENUITEM_QUIT           102
-
 class MenuScene : public Layer
 {
 public:
@@ -16,7 +13,9 @@ public:
 
 	virtual bool init();
 	CREATE_FUNC(MenuScene);
-
+    
+    Size winSize;
+    
 	void initBG();
 	void initMenu();
 

@@ -1,6 +1,7 @@
 #include "MenuScene.h"
 #include "GameScene.h"
 
+
 Scene* MenuScene::createScene()
 {
 	auto scene = Scene::create();
@@ -18,16 +19,19 @@ bool MenuScene::init()
 		return false;
 	}
 
+	winSize = Director::getInstance()->getWinSize();
+    
 	initBG();
 	initMenu();
 
+    
 	return true;
 }
 
 void MenuScene::initBG()
 {
 	auto spr = Sprite::create("menu/menu-bg.png");
-	spr->setPosition(Point(Director::getInstance()->getWinSize().width/2, Director::getInstance()->getWinSize().height/2));
+	spr->setPosition(Point(winSize.width/2, winSize.height/2));
     spr->setScale(2.5, 2.5);
 	this->addChild(spr);
 }
@@ -43,6 +47,11 @@ void MenuScene::initMenu()
 	auto menu = Menu::create(item_0, item_1, NULL);
 	menu->alignItemsVerticallyWithPadding(20);
 	this->addChild(menu);
+
+    auto label = Label::createWithSystemFont("指で飛行機を操作 \nBomb攻撃はダブルタップで", "", 30);
+	label->setPosition(Point(winSize.width/2, winSize.height/3 ));
+    label->setColor(Color3B::BLACK);
+    this->addChild(label);
 }
 
 void MenuScene::menuCallback(Ref *sender)

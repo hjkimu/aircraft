@@ -12,13 +12,54 @@ USING_NS_CC;
 #define TAG_LABEL_HITPOINT              1003
 #define TAG_LABEL_FINISH                1004
 #define TAG_LABEL_RESULT_SCORE          1005
+#define TAG_LABEL_DISTANCE              1006
+#define TAG_LABEL_BOMB_STOCK            1007
+#define TAG_PARTICLE_BOMB               1008
 
-#define TAG_MENU                        100
-#define TAG_MENUITEM_PLAY               101
-#define TAG_MENUITEM_QUIT               102
+#define TAG_MENU                        2000
+#define TAG_MENUITEM_PLAY               2001
+#define TAG_MENUITEM_QUIT               2002
+
+#define TAG_OPTION                      2100
+#define TAG_OPTION_BG                   2101
+#define TAG_OPTION_SOUND_ON             2102
+#define TAG_OPTION_SOUND_OFF            2103
+#define TAG_OPTION_CLOSE                2104
+#define TAG_OPTION_RETRY                2105
+#define TAG_OPTION_QUIT                 2106
+
 
 #define PADDING_SCREEN					10
 #define TAG_DEFAULT_HITPOINT            3
+#define MAX_STAGE            4
+
+#define ENEMY_1_HP           5
+#define ENEMY_2_HP           10 
+#define BOSS_1_HP            50
+
+#define ITEM_A               1
+#define ITEM_B               2
+#define ITEM_C               3
+#define ITEM_D               4
+#define ITEM_E               5
+
+#define MISSILE_A            1
+#define MISSILE_B            2
+#define MISSILE_C            3
+#define MISSILE_D            4
+
+#define BASIC_POWER            1
+#define MISSILE_A_POWER        3
+#define MISSILE_B_POWER        5
+#define MISSILE_C_POWER        10
+#define MISSILE_D_POWER        10
+
+#define BOMB_E_POWER           1
+#define BOMB_E_TIME            1 
+
+#define SOUND_MISSILE_1       1
+#define SOUND_CRASH_1         2
+
 
 class GameScene : public Layer
 {
@@ -32,29 +73,42 @@ public:
 	Size winSize;
 	Point posStartTouch, posStartPlayer;
 
-	Vector<Sprite*> items, enemies, missiles;
-
-	bool isGetItem;
-	bool isPowerUp;
-	bool isPlayable;
-	int nScore, nScoreHigh;
-    int nHitPoint;
+	Vector<Sprite*> items, enemies, missiles, bosses;
+    
+	bool isPlayable, isOnUsingItem, isOnLoading, isOnBossBattle;
+    int curStageNum, tabCnt;
+	int itemType, missileType;
+	int nScore, nScoreHigh, nHitPoint, bombStock;
+    float playTime, distance, tabTime, bombTime;
     float itemFrequency, enemyFrequency;
+    bool soundFlg;
 
 	void update(float delta);
 
 	void resetBoom(Ref *sender);
 
-	void resetGetItem(float delta);
-
 	void initData();
+    void resetData();
+    
+	void initStage(int stage);
+    void resetStage(Ref *sender);
+    int getStageNum(int distance);
 
 	void initBG();
 	void initPlayer();
 
+	void initBombStock();
+    void updateBomb(int amount);
+    void useBomb();
+    void setBombEffect(Ref *sender);
+    void endUseBomb(Ref *sender);
+
 	void initScore();
 	void addScore(int add);
 
+    void initDistance();
+    void updateDistance();
+    
 	void setMissile(float delta);
 	void resetMissile(Ref *sender);
     
@@ -63,24 +117,44 @@ public:
 
 	void setItem(float delta);
 	void resetItem(Ref *sender);
+    void setItemEffect(int itemType);
 
 	void setEnemy(float delta);
 	void resetEnemy(Ref *sender);
+	void destroyEnemy(Ref *sender);
 
+	void setBoss(int stage);
+    void resetBoss(Ref *sender);
+    void destroyBoss(Ref *sender);
+    
+    void clearBoss();
+    void clearEnemy();
+    void clearItem();
+    
+    void removeLabel(Ref *sender);
+    
     void initHitPoint();
     void reduceHitPoint(int damage);
     void setDamaged();
     
     void endGame();
+    void retryGame();
     
-	bool onTouchBegan(Touch *touch, Event *unused_event);
-	void onTouchMoved(Touch *touch, Event *unused_event);
+    void playSound(int type);
     
     void displayResult();
     void displayScore();
     void displayMenu();
-    
+     
+	bool onTouchBegan(Touch *touch, Event *unused_event);
+	void onTouchMoved(Touch *touch, Event *unused_event);
+   
     void menuCallback(Ref *sender);
+    
+    void displayOption();
+    void showOption();
+    void hideOption();
+
 };
 
 #endif

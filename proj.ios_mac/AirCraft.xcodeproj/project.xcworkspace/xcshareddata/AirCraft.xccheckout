@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C29D8317-F7E8-4642-A59F-A7FFAF529F07</string>
+	<key>IDESourceControlProjectName</key>
+	<string>AirCraft</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>35526D5B8CC9C1854803ADF72CA9679E5349EBAB</key>
+		<string>https://github.com/hyoungjinkim/aircraft.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>proj.ios_mac/AirCraft.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>35526D5B8CC9C1854803ADF72CA9679E5349EBAB</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/hyoungjinkim/aircraft.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>35526D5B8CC9C1854803ADF72CA9679E5349EBAB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>35526D5B8CC9C1854803ADF72CA9679E5349EBAB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>AirCraft</string>
+		</dict>
+	</array>
+</dict>
+</plist>
