@@ -31,11 +31,18 @@ USING_NS_CC;
 
 #define PADDING_SCREEN					10
 #define TAG_DEFAULT_HITPOINT            3
-#define MAX_STAGE            4
+#define MAX_STAGE            4 
 
-#define ENEMY_1_HP           5
-#define ENEMY_2_HP           10 
-#define BOSS_1_HP            50
+#define ENEMY_1_HP           1
+#define ENEMY_2_HP           5
+#define ENEMY_3_HP           10
+#define ENEMY_4_HP           20
+#define ENEMY_5_HP           50
+#define BOSS_1_HP            100
+
+#define MISSILE_SCORE        1
+#define ENEMY_SCORE          100
+#define BOSS_SCORE           500
 
 #define ITEM_A               1
 #define ITEM_B               2
@@ -127,8 +134,8 @@ public:
     void resetBoss(Ref *sender);
     void destroyBoss(Ref *sender);
     
-    void clearBoss();
-    void clearEnemy();
+    void clearBoss(bool addScoreFlg);
+    void clearEnemy(bool addScoreFlg);
     void clearItem();
     
     void removeLabel(Ref *sender);
@@ -155,6 +162,12 @@ public:
     void showOption();
     void hideOption();
 
+    void setEnemy1();
+    void setEnemy2();
+    void setEnemy3();
+    void setEnemy4();
+    void setEnemy5();
+    
 };
 
 #endif

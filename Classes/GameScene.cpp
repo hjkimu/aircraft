@@ -1,6 +1,5 @@
 #include "GameScene.h"
-#include "OptionLayer.h"
-#include "SimpleAudioEngine.h"  
+#include "SimpleAudioEngine.h"
 
 using namespace CocosDenshion;
 
@@ -108,11 +107,10 @@ void GameScene::update(float delta)
 
 				if (hp-attack>0) {
 					sprEnemy->setTag(hp - attack);
-					addScore(1);
+					addScore(MISSILE_SCORE);
 				}
 				else {
 					removeEnemy = sprEnemy;
-					addScore(100);
 				}
 			}
            
@@ -131,11 +129,10 @@ void GameScene::update(float delta)
 
 				if (hp-attack>0) {
 					sprBoss->setTag(hp - attack);
-					addScore(1);
+					addScore(MISSILE_SCORE);
 				}
 				else {
 					removeBoss = sprBoss;
-					addScore(100);
 				}
             }
 
@@ -169,6 +166,7 @@ void GameScene::update(float delta)
             
             if ( hp - BOMB_E_POWER > 0 ) {
                 sprBoss->setTag(hp - BOMB_E_POWER);
+                addScore(MISSILE_SCORE);
             } else {
                 removeBoss = sprBoss;
             }
@@ -193,10 +191,12 @@ void GameScene::update(float delta)
 
 	if (enemies.contains(removeEnemy)) {
 		destroyEnemy(removeEnemy);
+        addScore(ENEMY_SCORE);
 	}
  
 	if (bosses.contains(removeBoss)) {
 		destroyBoss(removeBoss);
+        addScore(BOSS_SCORE);
 	}   
 
 }
@@ -212,14 +212,9 @@ void GameScene::initData()
 {
     CCLOG("initData");
 
-    clearBoss();
+    clearBoss(false);
     clearItem();
-    clearEnemy();
-    
-	items.clear();
-	enemies.clear();
-	missiles.clear();
-    bosses.clear();
+    clearEnemy(false);
 
     curStageNum = 1;
     missileType = 0;
@@ -241,15 +236,8 @@ void GameScene::initData()
  
     initPlayer();
     reduceHitPoint(0);
+    addScore(0);
     updateBomb(0);
-    
-//
-//	auto labelScore = (Label*)this->getChildByTag(TAG_LABEL_SCORE);
-//	labelScore->setString(StringUtils::format("SCORE : %d", 0));
-//
-//	auto labelHitpoint = (Label*)this->getChildByTag(TAG_LABEL_HITPOINT);
-//	labelHitpoint->setString(StringUtils::format("HP : %d", 3));
-//
  
 }
 
@@ -449,7 +437,7 @@ void GameScene::useBomb()
     
     auto action = Sequence::create(
                                    ScaleTo::create(0.5, 5.0),
-                                   CallFunc::create(CC_CALLBACK_0(GameScene::clearEnemy, this)),
+                                   CallFuncN::create(CC_CALLBACK_1(GameScene::clearEnemy, this)),
                                    CallFuncN::create(CC_CALLBACK_1(GameScene::setBombEffect, this)),
                                    ScaleTo::create(0.5, 1.0),
                                    NULL
@@ -656,59 +644,212 @@ void GameScene::setEnemy(float detla)
 {
     if ( isOnLoading ) return;
 
+    int rand_num = rand()%100;
+
+    switch (curStageNum) {
+        case 1:
+        {
+            if ( rand_num < 80) {
+                setEnemy1();
+            } else {
+                setEnemy2();
+            }
+        }
+            break;
+            
+        case 2:
+        {
+            if ( rand_num < 50 ) {
+                setEnemy1();
+            } else if ( rand_num < 80) {
+                setEnemy2();
+            } else {
+                setEnemy3();
+            }
+        }
+            break;
+                       
+        case 3:
+        {
+            if ( rand_num < 40) {
+                setEnemy1();
+            } else if ( rand_num < 60) {
+                setEnemy2();
+            } else if ( rand_num < 80 ) {
+                setEnemy3();
+            } else {
+                setEnemy4();
+            }
+        }
+            break;
+            
+        case 4:
+        {
+            if ( rand_num < 30 ) {
+                setEnemy1();
+            } else if ( rand_num < 50 ) {
+                setEnemy2();
+            } else if ( rand_num < 70 ) {
+                setEnemy3();
+            } else if ( rand_num < 90) {
+                setEnemy4();
+            } else {
+                setEnemy5();
+            }
+
+        }
+            break;
+            
+        default:
+        {
+            if ( rand_num < 10 ) {
+                setEnemy1();
+            } else if ( rand_num < 30 ) {
+                setEnemy2();
+            } else if ( rand_num < 50 ) {
+                setEnemy3();
+            } else if ( rand_num < 80) {
+                setEnemy4();
+            } else {
+                setEnemy5();
+            }
+        }
+            break;
+    }
+
+}
+
+void GameScene::setEnemy1()
+{
 	int x = PADDING_SCREEN + rand() % ((int)winSize.width - PADDING_SCREEN * 2);
     
-	if (rand() % 10 < 2) {
-		auto sprEnemy = Sprite::create("game/enemy_2.png");
-		sprEnemy->setTag(ENEMY_2_HP);
-        float speed = 10.0;
-        
+    auto sprEnemy = Sprite::create("game/enemy_1.png");
+    sprEnemy->setTag(ENEMY_1_HP);
+    float speed = 10.0;
+    
+    sprEnemy->setPosition(Point(x, winSize.height));
+    auto action = Sequence::create(
+					MoveBy::create(speed, Point(0, -winSize.height)),
+					CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
+					NULL);
+	this->addChild(sprEnemy);
+
+	enemies.pushBack(sprEnemy);
+
+    sprEnemy->runAction(action);
+}
+
+void GameScene::setEnemy2()
+{
+ 	int x = PADDING_SCREEN + rand() % ((int)winSize.width - PADDING_SCREEN * 2);
+    
+    auto sprEnemy = Sprite::create("game/enemy_2.png");
+    sprEnemy->setTag(ENEMY_2_HP);
+    float speed = 6.0;
+    
+    sprEnemy->setPosition(Point(x, winSize.height));
+    auto action = Sequence::create(
+					MoveBy::create(speed, Point(0, -winSize.height)),
+					CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
+					NULL);
+	this->addChild(sprEnemy);
+
+	enemies.pushBack(sprEnemy);
+
+    sprEnemy->runAction(action);   
+}
+
+void GameScene::setEnemy3()
+{
+  	int x = PADDING_SCREEN + rand() % ((int)winSize.width - PADDING_SCREEN * 2);
+    
+    int enemy_count = (std::min)(rand() % 2, 5);
+    float speed1 = 1.0;
+    float speed2 = 2.0;
+    for (int i = 0; i < enemy_count; ++i) {
+        auto sprEnemy = Sprite::create("game/enemy_3.png");
+        sprEnemy->setTag(ENEMY_3_HP);
+
         sprEnemy->setPosition(Point(x, winSize.height));
-        auto action = Sequence::create(
-									MoveBy::create(speed, Point(0, -winSize.height)),
-									CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
-									NULL);
-    	this->addChild(sprEnemy);
+        
+        Sequence *action;
 
-    	enemies.pushBack(sprEnemy);
+        action = Sequence::create(
+                                  MoveBy::create(0.3 * i, Point(0, 0)),
+                                  MoveBy::create(speed1, Point(-100, -100)),
+                                  MoveBy::create(speed1, Point(200, -100)),
+                                  MoveBy::create(speed1, Point(100, -100)),
+                                  MoveBy::create(speed2, Point(0, -winSize.height)),
+                                  CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
+                                  NULL);
 
+        
+        this->addChild(sprEnemy);
+        
+        enemies.pushBack(sprEnemy);
+        
         sprEnemy->runAction(action);
     }
-	else {
-        int enemy_count = rand() % 2 > 0 ? 5 : 1;
-        float speed1 = 0.5;
-        float speed2 = 5.0;
-        for (int i = 0; i < enemy_count; ++i) {
-            auto sprEnemy = Sprite::create("game/enemy_1.png");
-            sprEnemy->setTag(ENEMY_1_HP);
-            
-            sprEnemy->setPosition(Point(x, winSize.height));
-            
-            Sequence *action;
-            if ( enemy_count > 1 ) {
-                action = Sequence::create(
-                                          MoveBy::create(0.3 * i, Point(0, 0)),
-                                          MoveBy::create(speed1, Point(-100, -100)),
-                                          MoveBy::create(speed1, Point(200, -100)),
-                                          MoveBy::create(speed1, Point(100, -100)),
-                                          MoveBy::create(speed2, Point(0, -winSize.height)),
-                                          CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
-                                          NULL);
-            } else {
-                action = Sequence::create(
-                                          MoveBy::create(speed2, Point(0, -winSize.height)),
-                                          CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
-                                          NULL);
-            }
-            
-            this->addChild(sprEnemy);
-            
-            enemies.pushBack(sprEnemy);
-            
-            sprEnemy->runAction(action);
-        }
+}
 
+void GameScene::setEnemy4()
+{
+  	int x = PADDING_SCREEN + rand() % ((int)winSize.width - PADDING_SCREEN * 2);
+    
+    int enemy_count = (std::min)(rand() % 2, 5);
+    float speed1 = 1.0;
+    float speed2 = 1.0;
+    for (int i = 0; i < enemy_count; ++i) {
+        auto sprEnemy = Sprite::create("game/enemy_4.png");
+        sprEnemy->setTag(ENEMY_4_HP);
+        
+        sprEnemy->setPosition(Point(x, winSize.height));
+        
+        Sequence *action;
+
+        action = Sequence::create(
+                                  MoveBy::create(0.3 * i, Point(0, 0)),
+                                  MoveBy::create(speed1, Point(-100, -100)),
+                                  MoveBy::create(speed1, Point(200, -100)),
+                                  MoveBy::create(speed1, Point(100, -100)),
+                                  MoveBy::create(speed2, Point(0, -winSize.height)),
+                                  CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
+                                  NULL);
+
+        
+        this->addChild(sprEnemy);
+        
+        enemies.pushBack(sprEnemy);
+        
+        sprEnemy->runAction(action);
     }
+}
+
+void GameScene::setEnemy5()
+{
+  	int x = PADDING_SCREEN + rand() % ((int)winSize.width - PADDING_SCREEN * 2);
+    
+    auto action_1 = Sequence::create(
+                                     DelayTime::create(1.0),
+                                     MoveBy::create(2, Point(0,-winSize.height)),
+                                     MoveBy::create(3, Point(0,winSize.height)),
+                                     NULL);
+    
+    auto action_2 = Sequence::create(
+                                     Repeat::create(action_1, 2),
+                                     MoveBy::create(2, Point(0,-winSize.height-50)),
+                                     CallFuncN::create(CC_CALLBACK_1(GameScene::resetEnemy, this)),
+                                     NULL);
+    
+    auto sprEnemy = Sprite::create("game/boss_1.png");
+    sprEnemy->setTag(ENEMY_5_HP);
+    sprEnemy->setScale(0.5, 0.5);
+    sprEnemy->setPosition(Point(x, winSize.height));
+    
+    this->addChild(sprEnemy, 1);
+    enemies.pushBack(sprEnemy);
+    
+    sprEnemy->runAction(action_2);
 }
 
 void GameScene::setBoss(int stage)
@@ -760,7 +901,7 @@ void GameScene::resetBoss(Ref *sender)
     
     this->removeChild(sprBoss);
     
-    clearEnemy();
+    clearEnemy(false);
  
     curStageNum = curStageNum <= MAX_STAGE ? curStageNum + 1 : MAX_STAGE;
     initStage(curStageNum);
@@ -771,7 +912,7 @@ void GameScene::destroyBoss(Ref *sender)
     auto sprBoss = (Sprite*)sender;
     
     playSound(SOUND_CRASH_1);
-    
+   
     isOnBossBattle = false;
     
 	auto particle = ParticleSystemQuad::create("game/explosion.plist");
@@ -789,7 +930,7 @@ void GameScene::destroyBoss(Ref *sender)
     
     this->removeChild(sprBoss);
     
-    clearEnemy();
+    clearEnemy(true);
  
     curStageNum = curStageNum <= MAX_STAGE ? curStageNum + 1 : MAX_STAGE;
     initStage(curStageNum);   
@@ -800,10 +941,16 @@ void GameScene::clearItem()
     for (Sprite* sprItem : items) {
         this->removeChild(sprItem);
     }
+    items.clear();
 }
 
-void GameScene::clearEnemy()
+void GameScene::clearEnemy(bool addScoreFlg)
 {
+    if ( addScoreFlg ) {
+        int cnt = enemies.size();
+        addScore(ENEMY_SCORE * cnt);
+    }
+    
     for (Sprite* sprEnemy: enemies) {
 
 		auto action = Sequence::create(
@@ -812,14 +959,21 @@ void GameScene::clearEnemy()
 										NULL);
 		sprEnemy->runAction(action);
     }
+    enemies.clear();
 
 }
 
-void GameScene::clearBoss()
+void GameScene::clearBoss(bool addScoreFlg)
 {
+    if ( addScoreFlg ) {
+        int cnt = bosses.size();
+        addScore(BOSS_SCORE * cnt);
+    }
+    
     for (Sprite* sprBoss : bosses) {
         this->removeChild(sprBoss);
     }
+    bosses.clear();
 }
 
 void GameScene::removeLabel(Ref *sender)
@@ -876,7 +1030,6 @@ void GameScene::retryGame()
     this->removeChild(sprPlayer);
 
     initData();
-    
     
     this->removeChild(this->getChildByTag(TAG_MENU));
     this->removeChild(this->getChildByTag(TAG_LABEL_FINISH));
@@ -1010,7 +1163,6 @@ void GameScene::onTouchMoved(Touch *touch, Event *unused_event)
 
 void GameScene::displayOption()
 {
-
    	auto item_0 = MenuItemImage::create("option/option.png", "option/option.png", CC_CALLBACK_1(GameScene::menuCallback, this));
 
 	item_0->setTag(TAG_OPTION);
@@ -1037,6 +1189,8 @@ void GameScene::displayMenu()
 
 void GameScene::showOption()
 {
+    if ( this->getChildByTag(TAG_OPTION) ) return;
+    
     Director::getInstance()->pause();
     
     auto spr = Sprite::create("menu/menu-bg.png");
