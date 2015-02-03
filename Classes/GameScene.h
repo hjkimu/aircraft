@@ -30,7 +30,7 @@ USING_NS_CC;
 
 
 #define PADDING_SCREEN					10
-#define TAG_DEFAULT_HITPOINT            3
+#define DEFAULT_HITPOINT            3
 #define MAX_STAGE            4 
 
 #define ENEMY_1_HP           1
@@ -49,6 +49,7 @@ USING_NS_CC;
 #define ITEM_C               3
 #define ITEM_D               4
 #define ITEM_E               5
+#define ITEM_F               6 
 
 #define MISSILE_A            1
 #define MISSILE_B            2
@@ -141,7 +142,7 @@ public:
     void removeLabel(Ref *sender);
     
     void initHitPoint();
-    void reduceHitPoint(int damage);
+    void updateHitPoint(int hp);
     void setDamaged();
     
     void endGame();

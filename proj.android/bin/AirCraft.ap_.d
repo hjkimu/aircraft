@@ -28,6 +28,7 @@
 /Users/kim/Projects/AirCraft/proj.android/assets/game/item_c.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/item_d.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/item_e.png \
+/Users/kim/Projects/AirCraft/proj.android/assets/game/item_f.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/missile.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/missile_a.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/missile_b.png \
@@ -35,6 +36,9 @@
 /Users/kim/Projects/AirCraft/proj.android/assets/game/player.plist \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/player.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/player_1.png \
+/Users/kim/Projects/AirCraft/proj.android/assets/game/player_2.jpg \
+/Users/kim/Projects/AirCraft/proj.android/assets/game/player_2.png \
+/Users/kim/Projects/AirCraft/proj.android/assets/game/player_3.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/game/tile.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/menu/menu-bg.png \
 /Users/kim/Projects/AirCraft/proj.android/assets/menu/play-0.png \

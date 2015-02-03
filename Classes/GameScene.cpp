@@ -148,7 +148,7 @@ void GameScene::update(float delta)
     		Rect rectEnemy = Rect(sprEnemy->getPositionX()-15, sprEnemy->getPositionY()-15, 30, 30);
             if (rectPlayer.intersectsRect(rectEnemy)) {
                 removeEnemy = sprEnemy;
-                reduceHitPoint(1);
+                updateHitPoint(-1);
                 CCLOG("remains hit point:%d", nHitPoint);
                 if ( 0 >= nHitPoint ) {
                     endGame();
@@ -176,7 +176,7 @@ void GameScene::update(float delta)
     		Rect rectBoss = Rect(sprBoss->getPositionX()-35, sprBoss->getPositionY()-35, 70, 70);
             if (rectPlayer.intersectsRect(rectBoss)) {
                 removeBoss = sprBoss;
-                reduceHitPoint(1);
+                updateHitPoint(-1);
                 CCLOG("remains hit point:%d", nHitPoint);
                 if ( 0 >= nHitPoint ) {
                     endGame();
@@ -224,7 +224,7 @@ void GameScene::initData()
     isOnBossBattle = false;
 	nScore = 0;
 	nScoreHigh = UserDefault::getInstance()->getIntegerForKey("HIGH_SCORE", 0);
-    nHitPoint = 3;
+    nHitPoint = DEFAULT_HITPOINT;
     
     bombStock = 3;
     tabTime = 0;
@@ -235,7 +235,7 @@ void GameScene::initData()
     initStage(curStageNum);
  
     initPlayer();
-    reduceHitPoint(0);
+    updateHitPoint(0);
     addScore(0);
     updateBomb(0);
  
@@ -322,12 +322,13 @@ void GameScene::initBG()
 
 void GameScene::initPlayer()
 {
-    auto sprPlayer = Sprite::create("game/player_1.png");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("game/player.plist");
+    auto sprPlayer = Sprite::createWithSpriteFrameName("player_1.png");
     sprPlayer->setPosition(Point(winSize.width / 2, winSize.height / 2));
-	sprPlayer->setTag(TAG_SPRITE_PLAYER);
-    nHitPoint = TAG_DEFAULT_HITPOINT;
-	this->addChild(sprPlayer, 1);
-
+    sprPlayer->setTag(TAG_SPRITE_PLAYER);
+    sprPlayer->setScale(0.5);
+    
+    this->addChild(sprPlayer, 10);
 }
 
 void GameScene::initHitPoint()
@@ -336,10 +337,10 @@ void GameScene::initHitPoint()
 	labelHp->setAnchorPoint(Point(1, 1));
 	labelHp->setPosition(Point(winSize.width / 2, winSize.height - 10));
 	labelHp->setColor(Color3B::BLACK);
-	labelHp->setTag(TAG_DEFAULT_HITPOINT);
+	labelHp->setTag(DEFAULT_HITPOINT);
 	this->addChild(labelHp, 100);
     
-    reduceHitPoint(0);
+    //updateHitPoint(0);
 }
 
 void GameScene::initScore()
@@ -436,10 +437,10 @@ void GameScene::useBomb()
     isOnUsingItem = true;
     
     auto action = Sequence::create(
-                                   ScaleTo::create(0.5, 5.0),
+                                   ScaleTo::create(0.5, 1.5),
                                    CallFuncN::create(CC_CALLBACK_1(GameScene::clearEnemy, this)),
                                    CallFuncN::create(CC_CALLBACK_1(GameScene::setBombEffect, this)),
-                                   ScaleTo::create(0.5, 1.0),
+                                   ScaleTo::create(0.5, 0.5),
                                    NULL
     );
     
@@ -494,7 +495,7 @@ void GameScene::setMissile(float delta)
     					NULL);
 
         	sprMissile->setPosition(sprPlayer->getPosition() + Point(-1, 20));
-        	this->addChild(sprMissile);
+        	this->addChild(sprMissile, 5);
 
         	missiles.pushBack(sprMissile);
 
@@ -547,7 +548,7 @@ void GameScene::setMissile(float delta)
     									CallFuncN::create(CC_CALLBACK_1(GameScene::resetMissile, this)),
     									NULL);
     	sprMissile->setPosition(sprPlayer->getPosition() + Point(-1, 20));
-        this->addChild(sprMissile, 10);
+        this->addChild(sprMissile, 5);
 
     	missiles.pushBack(sprMissile);
 
@@ -571,7 +572,7 @@ void GameScene::setItem(float delta)
 	int x = PADDING_SCREEN + rand() % ((int)winSize.width - PADDING_SCREEN * 2);
 
 	Sprite *sprItem ;
-    int rand_num = rand() % 5;
+    int rand_num = rand() % 6;
 
     if (rand_num <= 0) {
         sprItem = Sprite::create("game/item_a.png");
@@ -592,6 +593,10 @@ void GameScene::setItem(float delta)
     else if ( rand_num <= 4 ){
         sprItem = Sprite::create("game/item_e.png");
         sprItem->setTag(ITEM_E);
+    }
+    else if ( rand_num <= 5 ){
+        sprItem = Sprite::create("game/item_f.png");
+        sprItem->setTag(ITEM_F);
     }
 
 	sprItem->setPosition(Point(x, winSize.height));
@@ -633,6 +638,8 @@ void GameScene::setItemEffect(int itemType)
             break;
         case ITEM_E:
             updateBomb(1);
+        case ITEM_F:
+            updateHitPoint(1);
             break;
             
         default:
@@ -982,24 +989,30 @@ void GameScene::removeLabel(Ref *sender)
     this->removeChild(label);
 }
 
-void GameScene::reduceHitPoint(int damage)
+void GameScene::updateHitPoint(int hp)
 {
-    nHitPoint = nHitPoint - damage;
    
-	auto label = (Label*)this->getChildByTag(TAG_DEFAULT_HITPOINT);
+   	auto sprPlayer = (Sprite*)this->getChildByTag(TAG_SPRITE_PLAYER);
+    
+    nHitPoint = (std::min)(nHitPoint + hp, 6);
+   
+	auto label = (Label*)this->getChildByTag(DEFAULT_HITPOINT);
 	label->setString(StringUtils::format("HP : %d", nHitPoint));
-   
-    if ( damage > 0 ) {
-        auto action = Blink::create(1.0, 4);
-       
-    	auto sprPlayer = (Sprite*)this->getChildByTag(TAG_SPRITE_PLAYER);
-//        auto frameId = TAG_DEFAULT_HITPOINT - nHitPoint + 1;
-//        frameId = frameId < 3 ? frameId : 3;
-//        
-//        auto frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(StringUtils::format("player_%d.png",frameId));
-//        sprPlayer->setDisplayFrame(frame);
+    
+    if ( hp < 0 ) {
+        auto action = Sequence::create(
+                                       Blink::create(1.0, 4),
+                                       Show::create(),
+                                       NULL);
         sprPlayer->runAction(action);
+    } else if ( hp == 0 ) {
+        return;
     }
+   
+    auto frameId = (std::max)(1, nHitPoint - DEFAULT_HITPOINT);
+    CCLOG("player_%d.png",frameId);
+    auto frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(StringUtils::format("player_%d.png",frameId));
+    sprPlayer->setDisplayFrame(frame);
 }
 
 void GameScene::endGame()
@@ -1052,9 +1065,11 @@ void GameScene::displayResult()
     this->addChild(label_1) ;
  
     auto action_2 = Sequence::create(
-                                   ScaleTo::create(1.0, 1.5),
-                                   ScaleTo::create(0.5, 1.0),
-                                   NULL);
+                                     ScaleTo::create(1.0, 1.5),
+                                     ScaleTo::create(0.5, 1.0),
+                                     DelayTime::create(1.0),
+                                     CallFunc::create(CC_CALLBACK_0(GameScene::showOption, this)),
+                                     NULL);
     
     auto label_2 = Label::createWithSystemFont( StringUtils::format("SCORE : %d", nScore), "", 40 );
     label_2->setPosition(Point(winSize.width/2, winSize.height - 150));
@@ -1127,12 +1142,10 @@ bool GameScene::onTouchBegan(Touch *touch, Event *unused_event)
     posStartTouch = touch->getLocation();
 
 	auto sprPlayer = (Sprite*)this->getChildByTag(TAG_SPRITE_PLAYER);
+    sprPlayer->setRotationY(0);
 	posStartPlayer = sprPlayer->getPosition();
 
     //ダブルクリック判定
-    CCLOG("play Time : %f", playTime);
-    CCLOG("tab Time : %f", tabTime);
-    CCLOG("bombStock : %d", bombStock);
     if ( playTime - tabTime <= 0.3 ) {
         updateBomb(-1);
     }
@@ -1156,8 +1169,9 @@ void GameScene::onTouchMoved(Touch *touch, Event *unused_event)
     if ( newPos.x > 10 && newPos.y > 10
          && newPos.x < winSize.width - 10 && newPos.y < winSize.height - 20 )
     {
-        sprPlayer->setPosition(posStartPlayer + posChange);
+        sprPlayer->setPosition(newPos);
     }
+
     
 }
 
@@ -1240,17 +1254,7 @@ void GameScene::menuCallback(Ref *sender)
         showOption();
     }
         break;
-            
-//	case TAG_MENUITEM_PLAY:
-//	{
-//
-//        initData();
-//        
-//        this->removeChild(this->getChildByTag(TAG_MENU));
-//        this->removeChild(this->getChildByTag(TAG_LABEL_FINISH));
-//        this->removeChild(this->getChildByTag(TAG_LABEL_RESULT_SCORE));
-//	}
-//		break;
+
    	case TAG_OPTION_SOUND_ON:
 	{
         soundFlg = true;
@@ -1288,12 +1292,6 @@ void GameScene::menuCallback(Ref *sender)
 	}
 		break;
             
-//	case TAG_MENUITEM_QUIT:
-//		Director::getInstance()->end();
-//#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-//		exit(0);
-//#endif
-//		break;
 	default:
 		break;
 	}
